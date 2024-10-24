@@ -1,7 +1,9 @@
 <template>
   <div v-if="shoppingList">
-    <h1>{{ shoppingList.title }}</h1>
-
+    <div class="horizontal-align">
+      <h1>{{ shoppingList.title }}</h1>
+      <button class="delete-button">Delete</button>
+    </div>
     <ul>
       <template
         v-if="
@@ -12,7 +14,12 @@
       >
         <li v-for="item in shoppingList.items" :key="item.id">
           <div class="light">
-            <input class="checkbox" type="checkbox" v-model="item.checked" />
+            <input
+              class="checkbox"
+              type="checkbox"
+              v-model="item.checked"
+              @change="updateItemChecked(item)"
+            />
             {{ item.name }}
           </div>
           <div class="blue-background">{{ item.value }} {{ item.unit }}</div>
@@ -26,7 +33,6 @@
 
   <div v-else>
     <p>Načítavam zoznam...</p>
-    <!-- Loading message -->
   </div>
 </template>
 
@@ -53,6 +59,22 @@ export default {
       console.error("Error:", error);
       this.shoppingList = { error };
     }
+  },
+
+  methods: {
+    async updateItemChecked(item) {
+      try {
+        await axios.put(
+          `https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists/${this.$route.params.id}/items/${item.id}`,
+          {
+            is_checked: item.checked,
+          }
+        );
+        console.log(item.checked);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>
@@ -99,5 +121,21 @@ li {
 
 ul {
   padding: 0;
+}
+
+.horizontal-align {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-button {
+  background-color: transparent;
+  color: salmon;
+  border: 2px solid salmon;
+  border-radius: 10px;
+  height: 5vh;
+  width: 10vh;
+  font-size: 110%;
 }
 </style>
