@@ -2,7 +2,7 @@
   <div v-if="shoppingList">
     <div class="horizontal-align">
       <h1>{{ shoppingList.title }}</h1>
-      <button class="delete-button">Delete</button>
+      <button @click="deleteCheckedItems" class="delete-button">Delete</button>
     </div>
     <ul>
       <template
@@ -17,7 +17,7 @@
             <input
               class="checkbox"
               type="checkbox"
-              v-model="item.checked"
+              v-model="item.is_checked"
               @change="updateItemChecked(item)"
             />
             {{ item.name }}
@@ -28,6 +28,13 @@
       <template v-else>
         <li class="grey-color">Žiadne položky v zozname.</li>
       </template>
+      <input
+        type="text"
+        v-model="newItemName"
+        placeholder="New item"
+        @keyup.enter="addNewItem"
+        class="new-item-input"
+      />
     </ul>
   </div>
 
@@ -62,17 +69,62 @@ export default {
   },
 
   methods: {
+    async deleteCheckedItems() {
+      try {
+        const checkedItems = this.shoppingList.items.filter(
+          (item) => item.is_checked
+        );
+
+        console.log(checkedItems);
+        for (const item of checkedItems) {
+          await axios.delete(
+            `https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists/${this.$route.params.id}/items/${item.id}`
+          );
+          console.log(`Deleted item: ${item.name}`);
+        }
+
+        this.shoppingList.items = this.shoppingList.items.filter(
+          (item) => !item.is_checked
+        );
+      } catch (error) {
+        console.error("Error deleting items:", error.message);
+      }
+    },
+
     async updateItemChecked(item) {
       try {
         await axios.put(
           `https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists/${this.$route.params.id}/items/${item.id}`,
           {
-            is_checked: item.checked,
+            is_checked: item.is_checked,
           }
         );
-        console.log(item.checked);
+        console.log(this.shoppingList);
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    async addNewItem() {
+      if (this.newItemName.trim() === "") {
+        return;
+      }
+
+      try {
+        const newItem = {
+          name: this.newItemName,
+          value: 1,
+          unit: "piece",
+          is_checked: false,
+        };
+        const response = await axios.post(
+          `https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists/${this.$route.params.id}/items`,
+          newItem
+        );
+        this.shoppingList.items.push(response.data.data);
+        this.newItemName = "";
+      } catch (error) {
+        console.error("Error:", error);
       }
     },
   },
@@ -132,10 +184,17 @@ ul {
 .delete-button {
   background-color: transparent;
   color: salmon;
-  border: 2px solid salmon;
+  border: 2px solid red;
   border-radius: 10px;
   height: 5vh;
   width: 10vh;
   font-size: 110%;
+}
+
+.delete-button:hover {
+  cursor: pointer;
+  color: red;
+  border: 2px solid red;
+  background-color: salmon;
 }
 </style>
