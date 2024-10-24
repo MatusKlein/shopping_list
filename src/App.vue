@@ -1,7 +1,7 @@
 <template>
   <h1>Nova polozka</h1>
 
-  <p style="margin-bottom: 0; font-size: 90%">Nazov polozky</p>
+  <p class="item_text">Nazov polozky</p>
   <input v-model="input" placeholder="Maslo" /><br />
   <button @click="addItem">Pridať</button>
 
@@ -9,8 +9,8 @@
 
   <h2>Polozky</h2>
   <ul>
-    <li v-for="item in validItems" :key="`item-${item.id}`">
-      <span @click="deleteItem(item)" style="margin-right: 15px">X</span>
+    <li v-for="item in validItems" :key="item.id">
+      <span @click="deleteItem(item)" class="all_items">X</span>
       {{ item.text }}
     </li>
   </ul>
@@ -19,8 +19,8 @@
 
   <h2>Zmazane polozky</h2>
   <ul>
-    <li v-for="item in deletedItems" :key="`item-${item.id}`">
-      <span style="text-decoration: line-through; margin-right: 15px">
+    <li v-for="item in deletedItems" :key="item.id">
+      <span class="deleted_items">
         {{ item.text }}
       </span>
     </li>
@@ -48,14 +48,14 @@ export default {
 
   methods: {
     addItem() {
-      if (this.input.trim()) {
-        this.items.push({
-          id: this.items.length + 1,
-          text: this.input,
-          is_deleted: false,
-        });
-        this.input = "";
-      }
+      if (this.input.trim() === "") return;
+
+      this.items.push({
+        id: this.items.length + 1,
+        text: this.input,
+        is_deleted: false,
+      });
+      this.input = "";
     },
     deleteItem(item) {
       item.is_deleted = true;
@@ -72,5 +72,19 @@ export default {
   text-align: left;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.deleted_items {
+  text-decoration: line-through;
+  margin-right: 15px;
+}
+
+.all_items {
+  margin-right: 15px;
+}
+
+.item_text {
+  margin-bottom: 0;
+  font-size: 90%;
 }
 </style>
