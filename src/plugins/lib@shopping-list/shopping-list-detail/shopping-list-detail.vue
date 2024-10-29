@@ -185,4 +185,11 @@ ul {
   border: 2px solid red;
   background-color: salmon;
 }
+
+.new-item-input {
+  background-color: transparent;
+  color: white;
+  border: 1px solid grey;
+  border-radius: 2px;
+}
 </style>
