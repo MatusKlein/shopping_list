@@ -190,6 +190,6 @@ ul {
   background-color: transparent;
   color: white;
   border: 1px solid grey;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 </style>
