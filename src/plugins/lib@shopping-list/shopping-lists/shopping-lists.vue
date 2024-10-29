@@ -15,8 +15,8 @@
     </p>
 
     <div
-      v-for="(list, key) in shoppingLists"
-      :key="key"
+      v-for="(list, index) in shoppingLists"
+      :key="index"
       class="shopping-list-card"
     >
       <a
@@ -26,21 +26,7 @@
         <h2>{{ list.title }}</h2>
       </a>
       <ul>
-        <template
-          v-if="
-            list.items && Array.isArray(list.items) && list.items.length > 0
-          "
-        >
-          <li v-for="item in list.items.slice(0, 3)" :key="item.id">
-            <div class="light">
-              {{ item.name }}
-            </div>
-            <div class="blue-background">{{ item.value }} {{ item.unit }}</div>
-          </li>
-        </template>
-        <template v-else>
-          <li class="grey-color">Žiadne položky v zozname.</li>
-        </template>
+        <aList :list="list" />
       </ul>
     </div>
   </template>
@@ -48,8 +34,10 @@
 
 <script>
 import axios from "axios";
+import aList from "./_compontents/a-list.vue";
 
 export default {
+  components: { aList },
   data() {
     return {
       shoppingLists: null,

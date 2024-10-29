@@ -5,25 +5,13 @@
       <button @click="deleteCheckedItems" class="delete-button">Delete</button>
     </div>
     <ul>
-      <template
-        v-if="
-          shoppingList.items &&
-          Array.isArray(shoppingList.items) &&
-          shoppingList.items.length > 0
-        "
-      >
-        <li v-for="item in shoppingList.items" :key="item.id">
-          <div class="light">
-            <input
-              class="checkbox"
-              type="checkbox"
-              v-model="item.is_checked"
-              @change="updateItemChecked(item)"
-            />
-            {{ item.name }}
-          </div>
-          <div class="blue-background">{{ item.value }} {{ item.unit }}</div>
-        </li>
+      <template v-if="shoppingList.items && shoppingList.items.length">
+        <anItem
+          v-for="item in shoppingList.items"
+          :key="item.id"
+          :item="item"
+          @update-item-checked="updateItemChecked"
+        />
       </template>
       <template v-else>
         <li class="grey-color">Žiadne položky v zozname.</li>
@@ -45,11 +33,14 @@
 
 <script>
 import axios from "axios";
+import anItem from "./_components/a-shopping-list-item.vue";
 
 export default {
+  components: { anItem },
   data() {
     return {
       shoppingList: null,
+      newItemName: "",
     };
   },
 
@@ -91,24 +82,21 @@ export default {
       }
     },
 
-    async updateItemChecked(item) {
+    async updateItemChecked({ id, isChecked }) {
       try {
         await axios.put(
-          `https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists/${this.$route.params.id}/items/${item.id}`,
+          `https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists/${this.$route.params.id}/items/${id}`,
           {
-            is_checked: item.is_checked,
+            is_checked: isChecked,
           }
         );
-        console.log(this.shoppingList);
       } catch (error) {
         console.error(error);
       }
     },
 
     async addNewItem() {
-      if (this.newItemName.trim() === "") {
-        return;
-      }
+      if (this.newItemName.trim() === "") return;
 
       try {
         const newItem = {

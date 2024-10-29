@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
+  { path: "", redirect: "/shopping-lists" },
   {
-    path: "",
+    path: "/shopping-lists",
     name: "Shopping List - List",
     component: () =>
       import("@/plugins/lib@shopping-list/shopping-lists/shopping-lists.vue"),
