@@ -4,6 +4,7 @@ module.exports = defineConfig({
   chainWebpack: (config) => {
     config.entry("app").clear().add("/src/plugins/app/_config/main.js");
   },
+  /*
   devServer: {
     proxy: {
       "/api": {
@@ -12,4 +13,5 @@ module.exports = defineConfig({
       },
     },
   },
+  */
 });

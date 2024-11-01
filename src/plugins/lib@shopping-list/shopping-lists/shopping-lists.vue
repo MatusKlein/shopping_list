@@ -52,7 +52,9 @@ export default {
       // Skrateny zapis zakomentovaneho kodu vyssie, kde vytiahneme data pomocou destrukcie objektu
       const {
         data: { data: shoppingLists },
-      } = await axios.get("/api/v1/shopping-lists");
+      } = await axios.get(
+        "https://shoppinglist.wezeo.dev/cms/api/v1/shopping-lists"
+      );
       this.shoppingLists = shoppingLists;
       console.log("Shopping Lists:", this.shoppingLists);
     } catch (error) {
