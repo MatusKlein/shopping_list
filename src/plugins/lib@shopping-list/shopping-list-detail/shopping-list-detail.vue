@@ -92,8 +92,19 @@ export default {
             is_checked: isChecked,
           }
         );
+
+        const itemToUpdate = this.shoppingList.items.find(
+          (item) => item.id === id
+        );
+        if (itemToUpdate) {
+          itemToUpdate.is_checked = isChecked;
+        }
       } catch (error) {
         console.error(error);
+        const itemToUpdate = this.shoppingList.items.find(
+          (item) => item.id === id
+        );
+        itemToUpdate.is_checked = !isChecked;
       }
     },
 
