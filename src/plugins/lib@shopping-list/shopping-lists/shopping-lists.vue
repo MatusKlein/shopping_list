@@ -15,8 +15,8 @@
     </p>
 
     <div
-      v-for="(list, index) in shoppingLists"
-      :key="index"
+      v-for="list in shoppingLists"
+      :key="list.id"
       class="shopping-list-card"
     >
       <a

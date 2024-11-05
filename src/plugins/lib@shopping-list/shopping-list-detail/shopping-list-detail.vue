@@ -5,7 +5,7 @@
       <button @click="deleteCheckedItems" class="delete-button">Delete</button>
     </div>
     <ul>
-      <template v-if="shoppingList.items && shoppingList.items.length">
+      <template v-if="shoppingList.items?.length">
         <anItem
           v-for="item in shoppingList.items"
           :key="item.id"
